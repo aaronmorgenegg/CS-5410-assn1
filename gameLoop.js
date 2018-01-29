@@ -7,34 +7,40 @@ function addEvent(){
     var count = document.getElementById("input-count").value;
     var print_time = 0;
 
-    events.push({"name": name, "interval": interval, "count": count, "print_time": print_time});
+    if(name!==undefined && interval!==undefined && count!==undefined) {
+        events.push({"name": name, "interval": interval, "count": count, "print_time": print_time});
+    }
 }
 
 function printEvent(event){
-    console.log(event.name)
+    var node = document.getElementById("events");
+    node.innerHTML += "Event: " + event.name + "(" + event.count + " remaining)<br>";
+    node.scrollTop = node.scrollHeight;
 }
 
 function processInput(elapsedTime){
-    console.log("Processing Input...");
+
 }
 
 function update(elapsedTime){
-    console.log("Updating game...");
-    events = events.filter(function(n){ return n !== undefined });
-}
-
-function render(elapsedTime){
-    console.log("Rendering...");
     for(var i = 0; i < events.length; i++){
         if(events[i].print_time > events[i].interval){
             events[i].print_time = 0;
-            printEvent(events[i]);
             events[i].count -= 1;
-            if(events[i].count<=0){
+            if(events[i].count<0){
                 delete events[i];
             }
         } else {
             events[i].print_time += elapsedTime;
+        }
+    }
+    events = events.filter(function(n){ return n !== undefined });
+}
+
+function render(elapsedTime){
+    for(var i = 0; i < events.length; i++){
+        if(events[i].print_time > events[i].interval){
+            printEvent(events[i]);
         }
     }
 }
